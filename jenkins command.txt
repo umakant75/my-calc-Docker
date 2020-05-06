@@ -1,0 +1,249 @@
+https://www.jenkins.io/doc/tutorials/build-a-multibranch-pipeline-project/
+
+https://jenkins.io/doc/
+===================
+Jenkin Installation 
+xxxxxxxxxxxx
+Pre-requisite –
+Java is required for Jenkins installation
+#install Java
+sudo apt-get install default-jdk
+
+xxxxx
+wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
+OK
+------------------
+echo deb https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
+
+deb https://pkg.jenkins.io/debian-stable binary/
+--------------------
+sudo apt-get update
+... Done 
+-------------------
+sudo apt-get install jenkins
+---------------------------------
+sudo systemctl start jenkins
+--------------------------
+sudo systemctl status jenkins
+------------------------
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+634ff91216634346936d0bd4bdb4a13e
+----------------------------------------
+
+https://34.93.90.153:8080
+
+jenkin admin pages / put adimin pw
+
+ggranth12/Rain
+ggranth12@gmal.com
+
+http://34.93.90.153:8080/
+
+http://34.93.90.153:8080/login?from=%2F
+
+--------------
+sudo vi /var/lib/jenkins/config.xml 
+------------------
+
+1a5ddb49f2024a338b2a052b43eba3c2
+
+http://35.226.79.121:8080
+
+------------------------------
+Create First Admin User
+Username:	
+ukgupta
+Password:	
+••••
+Confirm password:	
+••••
+Full name:	
+Umakant Gupta
+E-mail address:	
+ukgupta24@gmail.com
+--------------------------------
+
+Instance Configuration
+Jenkins URL:	
+http://35.226.79.121:8080/
+----------------------------
+Jenkins is ready!
+You have skipped the setup of an admin user. 
+
+To log in, use the username: "admin" and the administrator password you used to access the setup wizard.
+Your Jenkins setup is complete.
+--------------------
+Error
+An error occurred
+Unable to connect to Jenkins
+----------------------------------------------
+
+Maven Installation steps:
+-=======================
+sudo apt-get update 
+-------------------
+sudo apt-get install maven
+--------------------
+
+==============================
+
+https://jenkins.io/doc/
+===================
+
+
+-----------------------------------------------------------------------
+General
+-------------
+Discard old builds	
+GitHub project	
+Permission to Copy Artifact	
+This build requires lockable resources	
+This project is parameterized	
+Throttle builds
+Disable this project	
+Execute concurrent builds if necessary
+
+
+Source code management
+--------------------------------
+None	
+Git	
+Subversion
+
+Build Triggers
+--------------------------
+Trigger builds remotely (e.g., from scripts)
+Build after other projects are builtt
+Build periodically	
+GitHub hook trigger for GITScm polling	
+Poll SCM
+
+
+Build Environment 
+-------------------------
+Delete workspace before build starts	
+Use secret text(s) or file(s)	 
+Abort the build if it's stuck	
+Add timestamps to the Console Output	
+Inspect build log for published Gradle build scans	
+With Ant
+
+
+
+Build
+
+Post Build Actions
+
+
+------------------------
+https://www.jenkins.io/doc/tutorials/build-a-multibranch-pipeline-project/
+-----------------------------
+
+Jenkins Pipeline provides an extensible set of tools for modeling simple-to-complex delivery pipelines "as code". The definition of a Jenkins Pipeline is typically written into a text file (called a Jenkinsfile) which in turn is checked into a project’s source control repository. [1]
+
+Create your initial Pipeline as a Jenkinsfile with build and test stages
+Using your favorite text editor or IDE, open the existing Jenkinsfile at the root of your local building-a-multibranch-pipeline-project Git repository and clear its contents.
+Note: Be sure you are performing this step on the master branch of your repository.
+
+Copy the following Declarative Pipeline code and paste it into your empty Jenkinsfile:
+
+pipeline {
+    agent {
+        docker {
+            image 'node:6-alpine'
+            args '-p 3000:3000 -p 5000:5000' 
+        }
+    }
+    environment {
+        CI = 'true'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh './jenkins/scripts/test.sh'
+            }
+        }
+    }
+}
+
+
+
+
+Add deliver and deploy stages to your Pipeline
+Go back to your text editor/IDE and ensure your Jenkinsfile is open.
+
+Copy and paste the following Declarative Pipeline syntax immediately under the Test stage of your Jenkinsfile:
+
+        stage('Deliver for development') {
+            when {
+                branch 'development'
+            }
+            steps {
+                sh './jenkins/scripts/deliver-for-development.sh'
+                input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
+        stage('Deploy for production') {
+            when {
+                branch 'production'
+            }
+            steps {
+                sh './jenkins/scripts/deploy-for-production.sh'
+                input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
+so that you end up with:
+
+pipeline {
+    agent {
+        docker {
+            image 'node:6-alpine'
+            args '-p 3000:3000 -p 5000:5000'
+        }
+    }
+    environment {
+        CI = 'true'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh './jenkins/scripts/test.sh'
+            }
+        }
+        stage('Deliver for development') {
+            when {
+                branch 'development' 
+            }
+            steps {
+                sh './jenkins/scripts/deliver-for-development.sh'
+                input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
+        stage('Deploy for production') {
+            when {
+                branch 'production'  
+            }
+            steps {
+                sh './jenkins/scripts/deploy-for-production.sh'
+                input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
+    }
+}
+
+
