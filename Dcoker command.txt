@@ -205,8 +205,10 @@ Step:-
 4. install pythom dependencies using pip
 5. copy source code to /opt folder
 6. run the web server using "flask" command
-----
+
+***********
 dockerfile
+======
 
 FROM Ubutun     # KW is used to define the base image on which will be building
 ADD <source> <destination> #KW is used to add files to be the container being build
@@ -222,7 +224,11 @@ COPY . /opt/source-code
 
 ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run   #KW is used sticity run commans the moment the container 
 EVN  -Dev      #KW is used to define enviroment varibles 
-
+workdir  /use/local/..
+expose     4576
+maintainer     example@domain.com  #example user
+----
+docker build dockerfile -t <path>  or <URL>
 ===============
 
 docker build Dockerfile/my-custom-app
