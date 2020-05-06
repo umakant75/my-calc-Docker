@@ -208,18 +208,23 @@ Step:-
 ----
 dockerfile
 
-FROM Ubutun
-
-RUN apt-get update
+FROM Ubutun     # KW is used to define the base image on which will be building
+ADD <source> <destination> #KW is used to add files to be the container being build
+RUN apt-get update    #KW is used to add layer to the base image  by installing componets.
 RUN apt-get install python
 
 RUN pip install flask
 RUN pip install flask-mysql
 
-COPY . /opt/source-code
+CMD  #KW is used to run command
 
-ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run
-----
+COPY . /opt/source-code 
+
+ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run   #KW is used sticity run commans the moment the container 
+EVN  -Dev      #KW is used to define enviroment varibles 
+
+===============
+
 docker build Dockerfile/my-custom-app
 docker pusk umakant75/my-custom-app
 
