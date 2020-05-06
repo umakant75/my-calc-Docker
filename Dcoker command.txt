@@ -1,0 +1,316 @@
+install of docker
+*********************
+https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
+cat /etc/"release"
+docker
+docker-engine
+
+****uninstall old versions
+sudo apt-get remove docker docker-engine docker.io
+sudo apt-get updat
+
+****install docker
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+
+*****Add Docker’s official GPG key:
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+*****Verify that you now have the key with the fingerprint
+sudo apt-key fingerprint 0EBFCD88
+
+*****command to set up the stable repository.
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+*****INSTALL DOCKER ENGINE - COMMUNITY
+****Update the apt package index.
+apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+docker help
+
+*****Verify that Docker Engine - Community is installed correctly by running the hello-world image.
+sudo docker aG
+
+sudo docker run hello-world
+
+****docker run on ubuntu 
+docker run -it ubuntu bash
+cat /etc/*release*
+exit
+****move to root
+
+****
+
+***Docker command start a container
+docker run ubuntu
+
+****list of containers
+docker ps
+docker ps -a
+
+***stop a container
+docker stop <container ID/Name >
+
+***remove a container
+docker ps 
+docker ps -*
+docker rm <container id/container name>
+docker ps -*
+
+****list images
+docker images
+docker rmi <images name>
+
+***pull images
+
+docker run ubuntu
+docker pull ubuntu
+docker run ubuntu sleep 1000
+
+****EXEC - execute a command
+docker ps
+docker exec <container id/name> cat /etc/hosts
+
+****docker helloword
+
+docker run <image name>
+docker run cnetos
+docker run -it centos bash
+ct /etc/*release*
+
+docker ps
+docker run centos sleep 20
+docker ps
+docker ps -a
+
+docker run -d centos sleep 20
+
+docker ps
+docker stop <container name/id>
+
+docker ps -a
+docker rm <containar id>
+
+docker ps -a
+docker rm 345 604 773   ==== multiple container remvoe
+
+=== Docker Images
+
+docker images
+docker rmi <images name>
+docker run centos 
+docker ps -a
+docker rm <containar id>
+docker rmi <images id>
+docker pull ubuntu <latest>
+docker exec <container id> cat /etc/*release*
+
+----------------------
+docker ps
+docker run ubuntu  -- what defult latest version
+docker run ubuntu cat /etc/"release:
+docker run ubuntu:17.10 cat /ect/"release"    -- tag  downlaod specify version
+docker run ubnutu sleep 15  =---teminater need use other terminal
+docker ps
+docker stop <containar ID>
+docker run -d uuntu sleep 1500   -- deattach mode run
+docker  attach <containar id>
+docker ps 
+docker stop
+dcoker run timar  =-- interactive time job running
+docker run -d timar   ==-- it running deattch mode
+docker attach
+docker run jenkins     ==== jenkins as containar running
+docker host ===  *---UI of docker host **** 
+docker ps
+
+==== Networking
+
+ open up browers it should be internal IP / vai mapping with port (external IP)
+
+docker inspect 		== find out docker internal IP
+
+ *-*-*-network setion ***-- IPaddress --- internal IP
+
+Docker host external IP
+port mapping 
+
+docker stop <containar IP> 	=== stop docker containal
+docker run -p 8080:8080 jenkins
+run with extranal IP
+configration of Jenkins and install default pluging.
+
+Docker networking
+
+default networks
+bride / none / host
+docker run ubuntu 
+docker run ubuntu  --network-=none
+docker run ubuntu  --network-=host
+
+docker network create \
+	--driver bridge \
+	--subnet 182.18.0.0/16
+	custom-isolated-network
+
+docker network ls
+
+******************************************
+
+
+
+******************
+jenkins store in valum (persistent valume) 
+/var/jenkins_home  
+
+by default data store inside of containal host /your/home: /var/jenkins_home
+
+
+stop containar and run again new containar
+mkdir my-jenkins-data
+docker run -p 8080:8080 -v /root/my-jenkins-data: /var/jenkins_home -u root jenkins 
+browser run jenkins and create project 
+docker stop <containar id>
+docker ps
+docker run -p 8080:8080 -v /root/my-jenkins-data: /var/jenkins_home -u root jenkins 
+
+this time directly come into login pages
+****all the custom data availabel on the containar
+-------------
+docker images:---
+*----*-*-**--*-
+Step:-
+1. OS Ubuntu
+2. update apt repo
+3. install dependencies usig apt
+4. install pythom dependencies using pip
+5. copy source code to /opt folder
+6. run the web server using "flask" command
+----
+dockerfile
+
+FROM Ubutun
+
+RUN apt-get update
+RUN apt-get install python
+
+RUN pip install flask
+RUN pip install flask-mysql
+
+COPY . /opt/source-code
+
+ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run
+----
+docker build Dockerfile/my-custom-app
+docker pusk umakant75/my-custom-app
+
+docker history <images name>
+
+docker build Dockerfile -t umakant75/my-custom-app
+
+*--*-*-
+***Docker images   github---mmumshad/simple-webapp-flask
+---app.py
+***install os
+***create container 
+docker run -it uduntu bash
+--intall python 
+apt-gt install -y python
+apt-get update
+apt-get install -y python
+python  =====we can see python
+exit()
+
+----install and configure web server -Flash
+pip install flask  --- not install 
+apt-get install python-pip
+pip install flask
+
+***-copy source code to /opt/app.py
+vi /opt/app.py
+:wq!
+FLASK_APP=app.py flask run --host=0.0.0.0
+cd opt
+FLASK_APP=app.py flask run --host=0.0.0.0
+
+external IP:5000/
+
+history
+apt-get update
+apt-get install -y python
+apt-get install -y python-pip
+pip install flask
+create/Copy application code to /opt/app.py
+FLASK_APP=/opt/app.py flask run --host=0.0.0.0
+
+exit
+docker ps
+
+
+mkdir my-simple-webapp
+cd my-simple-webapp/
+vi Dockerfile
+FROM ubuntu
+
+RUN apt-get update
+RUN apt-get install -y python python-pip
+RUN pip install flask
+
+COPY app.py /opt/app.py
+ENTRYPOINT FLASK_APP=/opt/app.py flask run --host=0.0.0.0
+
+
+:wq!
+vi app.py
+
+:wq!
+
+docker build .
+
+docker build . -t my-simple-web-app
+
+docker images
+
+docker images <image-name>
+
+docker build . -t umakant75/my-simple-webapp
+docker push umakant75/my-simple-webapp
+docker login
+docker push umakant75/my-simple-webapp
+docker push umakant75/my-simple-webapp
+
+**************************************
+
+Docker-compose.yml
+
+services:
+	web:
+	   image:"umakant75/simple-webapp"
+	   ports:
+		- "80:5000"
+
+      	database:
+	   image: "mysql"
+	   volumes:
+	      	- /opt/data:/var/lib/mysql	
+
+
+docker-compose up
+
+docker-compose stop
+
+docker compose down
+*******************************
+docker swarm
+**********************
+
+
+
